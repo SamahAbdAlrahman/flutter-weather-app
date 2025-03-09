@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dio/dio.dart';
 
 import '../models/weatherModel.dart';
@@ -22,8 +24,13 @@ class WeatherService {
 
       return weatherModel;
 
-    } catch (error) {
-      throw Exception(error);
+    } on DioException catch (error) {
+      if(error.response?.statusCode == 404){
+        return Future.error("error , city not found");
+
+      }
+      return Future.error("contact with admin");
+
     }
   }
 }

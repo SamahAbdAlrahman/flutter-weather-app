@@ -13,6 +13,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String? errorMsg;
   final TextEditingController _cityController = TextEditingController();
   final WeatherService _weatherService = WeatherService();
   WeatherModel? _weatherData;
@@ -23,10 +24,14 @@ class _MyHomePageState extends State<MyHomePage> {
       await _weatherService.getCurrentWeather(cityName: _cityController.text);
 
       setState(() {
+        errorMsg=null;
         _weatherData = weather;
       });
     } catch (e) {
-   print(e);
+      setState(() {
+        errorMsg = e.toString(); //
+      });
+      print(e);
     }
   }
   @override
@@ -63,10 +68,28 @@ class _MyHomePageState extends State<MyHomePage> {
               ), // TextFormField
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _fetchWeather,
 
+                onPressed: () {
+                  if (_cityController.text.isNotEmpty) {
+                    _fetchWeather();
+                  } else {
+                    setState(() {
+                      errorMsg = "Please enter a city name";
+                    });
+                  }
+                },
                 child: const Text("Search"),
               ),
+              // عرض رسالة الخطأ إن وجدت
+              if (errorMsg != null)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    errorMsg!,
+                    style: const TextStyle(color: Colors.red, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               if (_weatherData != null)
                 Column(
                   children: [
