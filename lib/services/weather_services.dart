@@ -7,6 +7,8 @@ class WeatherService {
   final String baseUrl = "https://api.openweathermap.org/data/2.5/weather";
   final String apiKey = "3ea8844812cd95db14225d897eb11bf9";
 
+
+  // fun
   Future<WeatherModel> getCurrentWeather({required String cityName}) async {
     try {
       Response response = await dio.get('${baseUrl}',
